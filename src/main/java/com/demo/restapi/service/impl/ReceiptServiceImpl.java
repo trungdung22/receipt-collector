@@ -54,10 +54,10 @@ public class ReceiptServiceImpl implements ReceiptService {
     private MediaRepository mediaRepository;
 
     @Override
-    public PagedResponse<ReceiptResponse> getAllReceipts(int page, int size) {
+    public PagedResponse<ReceiptResponse> getAllReceipts(UserPrincipal currentUser, int page, int size) {
         AppUtils.validatePageNumberAndSize(page, size);
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, CREATED_AT);
-        Page<Receipt> receipts = receiptRepository.findAll(pageable);
+        Page<Receipt> receipts = receiptRepository.findByUserId(currentUser.getId(), pageable);
         if (receipts.getNumberOfElements() == 0) {
             return new PagedResponse<>(Collections.emptyList(), receipts.getNumber(), receipts.getSize(), receipts.getTotalElements(),
                     receipts.getTotalPages(), receipts.isLast());

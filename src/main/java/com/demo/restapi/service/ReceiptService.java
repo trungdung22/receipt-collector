@@ -9,7 +9,7 @@ import com.demo.restapi.security.UserPrincipal;
 import org.springframework.http.ResponseEntity;
 
 public interface ReceiptService {
-    PagedResponse<ReceiptResponse> getAllReceipts(int page, int size);
+    PagedResponse<ReceiptResponse> getAllReceipts(UserPrincipal currentUser, int page, int size);
     ResponseEntity<Receipt> addReceipt(ReceiptRequest receiptRequest, UserPrincipal currentUser);
     ResponseEntity<Receipt> getReceipt(Long id);
     ResponseEntity<ReceiptResponse> updateReceipt(Long id, ReceiptRequest newBill, UserPrincipal currentUser);

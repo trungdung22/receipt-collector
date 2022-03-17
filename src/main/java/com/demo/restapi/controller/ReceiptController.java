@@ -46,11 +46,12 @@ public class ReceiptController {
 
     @GetMapping
     public PagedResponse<ReceiptResponse> getAllReceipts(
+            @CurrentUser UserPrincipal currentUser,
             @RequestParam(name = "page", required = false, defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) Integer page,
             @RequestParam(name = "size", required = false, defaultValue = AppConstants.DEFAULT_PAGE_SIZE) Integer size) {
         AppUtils.validatePageNumberAndSize(page, size);
 
-        return receiptService.getAllReceipts(page, size);
+        return receiptService.getAllReceipts(currentUser, page, size);
     }
 
     @PostMapping

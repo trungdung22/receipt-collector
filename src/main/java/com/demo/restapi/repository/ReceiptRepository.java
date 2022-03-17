@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReceiptRepository extends JpaRepository<Receipt, Long>{
     Page<Receipt> findByCreatedBy(Long userId, Pageable pageable);
+    Page<Receipt> findByUserId(Long userId, Pageable pageable);
 }
