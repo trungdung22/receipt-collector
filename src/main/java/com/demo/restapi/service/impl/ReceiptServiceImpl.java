@@ -5,6 +5,7 @@ import com.demo.restapi.exception.ResourceNotFoundException;
 import com.demo.restapi.model.Media;
 import com.demo.restapi.model.Receipt;
 import com.demo.restapi.model.User;
+import com.demo.restapi.payload.MediaResponse;
 import com.demo.restapi.payload.ReceiptResponse;
 import com.demo.restapi.payload.ApiResponse;
 import com.demo.restapi.payload.PagedResponse;
@@ -15,6 +16,7 @@ import com.demo.restapi.repository.ReceiptRepository;
 import com.demo.restapi.repository.UserRepository;
 import com.demo.restapi.security.UserPrincipal;
 import com.demo.restapi.service.ReceiptService;
+import com.demo.restapi.service.StorageService;
 import com.demo.restapi.utils.AppUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +55,9 @@ public class ReceiptServiceImpl implements ReceiptService {
     @Autowired
     private MediaRepository mediaRepository;
 
+    @Autowired
+    private StorageService storageService;
+
     @Override
     public PagedResponse<ReceiptResponse> getAllReceipts(UserPrincipal currentUser, int page, int size) {
         AppUtils.validatePageNumberAndSize(page, size);
@@ -61,6 +66,13 @@ public class ReceiptServiceImpl implements ReceiptService {
         if (receipts.getNumberOfElements() == 0) {
             return new PagedResponse<>(Collections.emptyList(), receipts.getNumber(), receipts.getSize(), receipts.getTotalElements(),
                     receipts.getTotalPages(), receipts.isLast());
+        }
+
+        for (Receipt receipt : receipts.getContent()) {
+            List<Media> mediaList = receipt.getMedia();
+            for (Media media : mediaList) {
+                media.setUrl(storageService.findByName(media.getKeyName()));
+            }
         }
 
         List<ReceiptResponse> receiptResponse = Arrays.asList(modelMapper.map(receipts.getContent(), ReceiptResponse[].class));

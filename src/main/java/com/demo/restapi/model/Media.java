@@ -34,6 +34,9 @@ public class Media extends UserDateAudit{
     @ToString.Exclude
     private Receipt receipt;
 
+    @Transient
+    private String url;
+
     public Media(@NotBlank String fileName, @NotBlank String keyName, Receipt receipt) {
         this.fileName = fileName;
         this.keyName = keyName;
